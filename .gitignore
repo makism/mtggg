@@ -1,5 +1,6 @@
 #
-project/dataset/
+project/dataset/*.json
+project/dataset/*.parquet
 project/metastore_db/
 project/derby.log
 project/migrated
