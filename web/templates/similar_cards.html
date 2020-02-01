@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block body %}
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Similar cards</li>
+        <li class="breadcrumb-item" aria-current="page">card name</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page">Model Plot</li>
+    </ol>
+</nav>
+<div id='myDiv'></div>
+<script type="text/javascript">
+    var trace1 = {
+        x: [1, 2, 3, 4],
+        y: [10, 15, 13, 17],
+        mode: 'markers',
+        type: 'scatter'
+    };
+
+    var data = [trace1];
+
+    Plotly.newPlot('myDiv', data);
+</script>
+
+<hr />
+
+<button class="btn btn-primary hBack" type="button">
+    <i class="fas fa-arrow-left"></i>
+    back
+</button>
+
+{% endblock %}
