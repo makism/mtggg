@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request
 from pymongo import MongoClient
-
-# from pyelasticsearch import ElasticSearch
 from elasticsearch import Elasticsearch
 
 
@@ -16,7 +14,7 @@ def web_search():
     total = 0
 
     if param_search is not "":
-        es = Elasticsearch("http://localhost:9200/mtgp/v3")
+        es = Elasticsearch("http://localhost:9200/mtgp/v4")
 
         query = {"query": {"match": {"name": param_search}}, "from": 0, "size": 10}
         hits = es.search(body=query)
@@ -34,13 +32,19 @@ def web_search():
 
 @app.route("/similar/<card>/")
 def web_similar(card):
-    return render_template("similar_cards.html")
+    card = int(card)
+
+    card_details = client.mtgp.v4.cards.find_one({"number": card})
+    # ml_feats = client.mtgp.ml.feats.v1.find_one({"number": card})
+    ml_similar = client.mtgp.ml.similar.v1.find_one({"number": card})
+
+    return render_template("similar_cards.html", card=card_details)
 
 
 @app.route("/all/")
 @app.route("/all/<page>")
 def web_all(page=0):
-    cards = client.mtgp.v3.cards.find()
+    cards = client.mtgp.v4.cards.find()
     cards_total = cards.count()
 
     page = int(page)
