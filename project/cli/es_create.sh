@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl -XPUT 'http://localhost:9200/mtgp/' -d '{
+curl -XPUT 'http://localhost:9200/mtggg/' -d '{
     "settings" : {
         "index" : {
             "number_of_shards" : 1,
