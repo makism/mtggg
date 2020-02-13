@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
+
+{% import "macro_card.html" as macro_card %}
+
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
 <nav aria-label="breadcrumb">
@@ -11,15 +14,15 @@
 
 <div class="container">
     <div class="row">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div>
-        </div>
+        {{ macro_card.show_card(card['name'], 0, card['types'], card['originalText'], True) }}
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for card in similar_cards %}
+        {{ macro_card.show_card(card['name'], 0, card['types'], card['originalText']) }}
+        {% endfor %}
     </div>
 </div>
 

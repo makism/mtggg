@@ -14,7 +14,7 @@ def web_search():
     total = 0
 
     if param_search is not "":
-        es = Elasticsearch("http://localhost:9200/mtgp/v4")
+        es = Elasticsearch("http://localhost:9200/mtggg/v1")
 
         query = {"query": {"match": {"name": param_search}}, "from": 0, "size": 10}
         hits = es.search(body=query)
@@ -34,17 +34,24 @@ def web_search():
 def web_similar(card):
     card = int(card)
 
-    card_details = client.mtgp.v4.cards.find_one({"number": card})
-    # ml_feats = client.mtgp.ml.feats.v1.find_one({"number": card})
-    ml_similar = client.mtgp.ml.similar.v1.find_one({"number": card})
+    card_details = client.mtggg.v1.cards.find_one({"number": card})
+    # ml_feats = client.mtggg.ml.feats.v3.find_one({"number": card})
+    ml_similar = client.mtggg.ml.similar.v1.find_one({"number": card})
 
-    return render_template("similar_cards.html", card=card_details)
+    similar_cards = list()
+    for card_id in ml_similar["similar"]:
+        card = client.mtggg.v1.cards.find_one({"number": card_id})
+        similar_cards.append(card)
+
+    return render_template(
+        "similar_cards.html", card=card_details, similar_cards=similar_cards
+    )
 
 
 @app.route("/all/")
 @app.route("/all/<page>")
 def web_all(page=0):
-    cards = client.mtgp.v4.cards.find()
+    cards = client.mtggg.v1.cards.find()
     cards_total = cards.count()
 
     page = int(page)
