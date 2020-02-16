@@ -1,10 +1,11 @@
 import sys
 import tweepy as tw
 
-consumer_key = "KF2af8ed1Mpf4f10VaSZvkL1b"
-consumer_secret = "FNJRTvMzPJMtLLwNO1mrrNH9fu1Ky1GwetEAikEFAKnDfCk1Sm"
-access_token = "1150333679224459265-bjNjocxNLlrxpWA1DooZ3vbemPgF4j"
-access_token_secret = "iI3HsrjAKpCNJ8zfcBpHAoRH1i1KiYCjzY6qPH06fs3fc"
+# Fetch the credentials from the secrets file.
+consumer_key = ""
+consumer_secret = ""
+access_token = ""
+access_token_secret = ""
 
 auth = tw.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
