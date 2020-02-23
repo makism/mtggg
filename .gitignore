@@ -4,6 +4,8 @@ project/dataset/*.parquet
 project/metastore_db/
 project/derby.log
 project/migrated
+project/cli/.metaflow/
+project/models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
