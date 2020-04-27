@@ -1,5 +1,7 @@
 #!/bin/bash
 
+wget "https://www.mtgjson.com/json/IKO.json"
+
 wget "https://www.mtgjson.com/json/THB.json"
 
 wget "https://www.mtgjson.com/json/ELD.json"
