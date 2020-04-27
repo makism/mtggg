@@ -1,0 +1,1 @@
+{"flow_id": "PreprocessCards", "run_number": "1587945719890297", "step_name": "start", "task_id": "1", "field_name": "log_location_stdout", "type": "log_path", "value": "{\"ds_type\": \"local\", \"location\": \"/mtgp/metaflow/.metaflow/PreprocessCards/1587945719890297/start/1/0.stdout.log\", \"attempt\": 0}", "user_name": "vagrant", "ts_epoch": 1587945720740}
