@@ -59,7 +59,7 @@ def web_all(page=0):
     total_pages = int(cards_total / 10.0)
     skip = int(page * 10.0)
 
-    cards = cards.skip(skip).limit(limit)
+    cards = cards.skip(skip).limit(limit).sort("name")
     num_cards = cards.count()
 
     previous_page = page - 1
