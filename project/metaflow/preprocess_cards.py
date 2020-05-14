@@ -1,9 +1,6 @@
 # pylint: disable-all
 import json
-import numpy as np
 import os.path
-from pyspark.context import SparkContext
-from pyspark.sql import SparkSession
 from metaflow import FlowSpec, Parameter, step
 
 import config
@@ -29,6 +26,7 @@ class PreprocessCards(FlowSpec):
     @step
     def process_json(self):
         """ Read data. """
+
         self.code = self.input
 
         json_file = f"{config.DATASET}/{self.code}.json"
@@ -53,9 +51,9 @@ class PreprocessCards(FlowSpec):
     @step
     def end(self):
         """ Finalize and clean up. """
+
         print("All done.")
 
 
 if __name__ == "__main__":
-    # run preprocess_cards.py run --keyruneCodes 'THB,ELD'
     PreprocessCards()
