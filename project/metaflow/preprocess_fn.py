@@ -8,7 +8,7 @@ from pyspark.sql.functions import udf
 from pyspark.ml.feature import StringIndexer, IndexToString
 
 
-sys.path.append("../conf/")
+sys.path.append("../config/")
 import config
 
 import preprocess_fn_text_rules
@@ -17,12 +17,14 @@ text_rules = preprocess_fn_text_rules.text_rules
 
 
 def spark_session(spark=None) -> pyspark.sql.SparkSession:
+    """ Create or, get an existing Spark session. """
     if spark is None:
         spark = SparkSession.builder.appName("mtggg").getOrCreate()
     return spark
 
 
 def remove_duplicate_cards(df) -> pyspark.sql.DataFrame:
+    """ Remove duplicate card entries based on their name. """
     pd_names = df.select(["number", "name"]).toPandas()
 
     unique_names, indices, counts = np.unique(
@@ -38,6 +40,7 @@ def remove_duplicate_cards(df) -> pyspark.sql.DataFrame:
 
 
 def drop_columns(df) -> pyspark.sql.DataFrame:
+    """ Drop unwanted columns. """
     keep_cols = [
         "colorIdentity",
         "convertedManaCost",
@@ -63,19 +66,19 @@ def drop_columns(df) -> pyspark.sql.DataFrame:
 
 @udf
 def udf_filter_text(name, text):
+    """ A simple UDF to search & replace occurances of a card's name with a placeholder. """
     if isinstance(text, str):
         new_text = text
         new_text = new_text.replace(name, "CARDNAME")
         for line in new_text:
             for rule, replace in text_rules.items():
                 new_text = new_text.replace(rule, replace)
-
         #         print(new_text)
-
         return new_text
 
 
-def explode_to_strs(df, cols):
+def explode_to_strs(df, cols) -> pyspark.sql.DataFrame:
+    """  """
     for col in cols:
         df_edited = df.selectExpr(["number", col]).select(
             "number", fn.expr(f"concat_ws(',', {col})").alias(f"str_{col}")
@@ -84,7 +87,8 @@ def explode_to_strs(df, cols):
     return df
 
 
-def encode_strings(df, cols):
+def encode_strings(df, cols) -> pyspark.sql.DataFrame:
+    """ """
     for col in cols:
         indexer = StringIndexer(
             inputCol=f"{col}", outputCol=f"encoded_{col}", stringOrderType="alphabetAsc"
