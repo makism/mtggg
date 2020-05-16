@@ -18,14 +18,23 @@ It will download a few JSON files in the `dataset` directory.
 
 If you are planning to use the project outside the Vagrant box, you will have to modify the file `config/config.py` and set the variable `ROOT` accordingly.
 
-## Preprocess
+## Database preparation
+
+Now, we'll fetch the cards and drop some metadata from the JSON files.
+
+```
+cd metaflow
+python prepare_cards.py run --keyruneCodes 'THB,ELD'
+```
+
+## Preprocessing
 
 The next step is to perform an initial preprocessing and extract only the cards from the JSON files.
 
 ```
-cd metaflow
-python preprocess_cards.py run --keyruneCodes 'THB,ELD'
+python preprocess_cards.py run
 ```
+
 
 ## EDA
 
