@@ -4,6 +4,7 @@ import numpy as np
 import pyspark
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as fn
+import pyspark.sql.types as t
 from pyspark.sql.functions import udf
 from pyspark.ml.feature import StringIndexer, IndexToString
 
@@ -70,15 +71,47 @@ def udf_filter_text(name, text):
     if isinstance(text, str):
         new_text = text
         new_text = new_text.replace(name, "CARDNAME")
+
         for line in new_text:
             for rule, replace in text_rules.items():
                 new_text = new_text.replace(rule, replace)
-        #         print(new_text)
+
         return new_text
 
 
+@fn.udf(returnType=t.ArrayType(t.StringType()))
+def udf_text_to_keywords(name, text) -> pyspark.sql.types.ArrayType:
+    """ """
+    feats = list()
+    if isinstance(text, str):
+        new_text = text.replace(name, "CARDNAME")
+        for line in new_text.split("\n"):
+            for rule, replace in text_rules.items():
+                if line.startswith(rule):
+                    line = line.replace(rule, replace)
+                    feats.append(replace)
+    return feats
+
+
+@fn.udf(returnType=t.ArrayType(t.IntegerType()))
+def text_to_vector(label_encoder, text_features):
+    lenc = label_encoder
+
+    if len(text_features) > 0:
+        enc_list = list()
+        for item in text_features:
+            item = str(item)
+            encoded = lenc.transform([item])
+            encoded = int(encoded[0])
+            enc_list.append(encoded)
+
+            print(f"{item} \t {encoded}")
+        return enc_list
+    return list()
+
+
 def explode_to_strs(df, cols) -> pyspark.sql.DataFrame:
-    """  """
+    """ Explode the selected arrays in a string, separated by ','. """
     for col in cols:
         df_edited = df.selectExpr(["number", col]).select(
             "number", fn.expr(f"concat_ws(',', {col})").alias(f"str_{col}")
@@ -98,4 +131,7 @@ def encode_strings(df, cols) -> pyspark.sql.DataFrame:
 
         indexer.save(f"/tmp/pyspark/stringindexer_{col}")
         model.save(f"/tmp/pyspark/stringindexer_model_{col}")
+
+        # indexer.save(f"{config.SPARK_MODELS}/stringindexer_{col}")
+        # model.save(f"{config.SPARK_MODELS}/stringindexer_model_{col}")
     return df
