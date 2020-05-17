@@ -6,10 +6,10 @@ project/derby.log
 project/migrated
 project/cli/.metaflow/
 project/artifacts/
-project/metaflow/.metaflow/
-project/data_prep_eda/metastore_db/
-project/models/
-project/node_modules/
+project/metaflow/.metaflow/*
+project/data_prep_eda/metastore_db/*
+project/models/*
+project/node_modules/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
