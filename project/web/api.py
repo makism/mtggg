@@ -54,7 +54,7 @@ class ML_Train(Resource):
         return json.dumps(dag)
 
 
-api.add_resource(ML_Train, "/train/")
+api.add_resource(ML_Train, "/v1/train/")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
