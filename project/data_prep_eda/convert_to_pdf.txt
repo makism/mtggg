@@ -1,0 +1,1 @@
+jupyter nbconvert --to pdf --template hidecode "x - SQL EDA.ipynb"
