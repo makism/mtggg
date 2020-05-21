@@ -19,6 +19,9 @@ text_rules = {
     "Double strike": "DOUBLE_STRIKE",
     "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)": "DEATHTOUCH",
     "Deathtouch": "DEATHTOUCH",
+    "This spell can't be countered": "CANT_BE_COUNTER",
+    "Lifelink (Damage dealt by this creature also causes you to gain that much life.)": "LIFELINK",
+    "Lifelink": "LIFELINK",
     "Protection from green (This creature can't be blocked, targeted, dealt damage, enchanted, or equipped by anything green.)": "PROTECTION_FROM_GREEN",
     "Protection from red (This creature can't be blocked, targeted, dealt damage, enchanted, or equipped by anything red.)": "PROTECTION_FROM_RED",
     "Protection from black (This creature can't be blocked, targeted, dealt damage, enchanted, or equipped by anything black.)": "PROTECTION_FROM_BLACK",
@@ -26,4 +29,9 @@ text_rules = {
     "Protection from white (This creature can't be blocked, targeted, dealt damage, enchanted, or equipped by anything white.)": "PROTECTION_FROM_WHITE",
     "(As this Saga enters and after your draw step, add a lore counter. Sacrifice after III.)": "SAGA_3",
     "(As this Saga enters and after your draw step, add a lore counter. Sacrifice after IV.)": "SAGA_4",
+}
+
+text_patterns = {
+    "([A|a]s long as it's your turn[,.]?)": "YOUR_TURN",
+    "([A|a]s long as it's attacking[,.]?)": "IS_ATTACKING",
 }

@@ -1,4 +1,5 @@
 import sys
+import re
 import pandas as pd
 import numpy as np
 import pyspark
@@ -15,6 +16,7 @@ import config
 import preprocess_fn_text_rules
 
 text_rules = preprocess_fn_text_rules.text_rules
+text_patterns = preprocess_fn_text_rules.text_patterns
 
 
 def spark_session(spark=None) -> pyspark.sql.SparkSession:
@@ -90,6 +92,28 @@ def udf_text_to_keywords(name, text) -> pyspark.sql.types.ArrayType:
                 if line.startswith(rule):
                     line = line.replace(rule, replace)
                     feats.append(replace)
+    return feats
+
+
+@fn.udf(returnType=t.ArrayType(t.StringType()))
+def udf_patterns_to_keywords(name, text) -> pyspark.sql.types.ArrayType:
+    """ """
+    feats = list()
+    if isinstance(text, str):
+        new_text = text  # .replace(name, "CARDNAME")
+
+        for pattern in text_patterns:
+            new_text = pyspark.sql.functions.regexp_replace(
+                text, r"([A|a]s long as it's your turn)[,.]?", "YOUR_TURN"
+            )
+
+        # df_filtered.withColumn('new', pyspark.sql.functions.regexp_replace('originalText', r"([A|a]s long as it's your turn)[,.]?", 'YOUR_TURN'))
+
+        # for line in new_text.split("\n"):
+        # for rule, replace in text_rules.items():
+        # if re.match(rule, line) is not None:
+        # line = re.sub(pattern=rule, string=line, repl=replace)
+        # feats.append(replace)
     return feats
 
 
