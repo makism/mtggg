@@ -1,4 +1,6 @@
 #
+project/tmp/
+project/logs/
 project/dataset/*.json
 project/dataset/*.parquet
 project/metastore_db/
