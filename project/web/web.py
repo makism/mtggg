@@ -14,7 +14,7 @@ def web_search():
     total = 0
 
     if param_search is not "":
-        es = Elasticsearch("http://localhost:9200/mtggg/v1")
+        es = Elasticsearch("http://localhost:9200/mtggg/cards")
 
         query = {"query": {"match": {"name": param_search}}, "from": 0, "size": 10}
         hits = es.search(body=query)
@@ -34,14 +34,16 @@ def web_search():
 def web_similar(card):
     card = int(card)
 
-    card_details = client.mtggg.v1.cards.find_one({"number": card})
+    card_details = client.mtggg.cards.find_one({"number": card})
+    card_features = client.mtggg.cards_features.find_one({"number": card})
     # ml_feats = client.mtggg.ml.feats.v3.find_one({"number": card})
-    ml_similar = client.mtggg.ml.similar.v1.find_one({"number": card})
+    ml_similar = client.mtggg.ml.similar.find_one({"number": card})
 
     similar_cards = list()
-    for card_id in ml_similar["similar"]:
-        card = client.mtggg.v1.cards.find_one({"number": card_id})
-        similar_cards.append(card)
+    if ml_similar is not None:
+        for card_id in ml_similar["similar"]:
+            card = client.mtggg.cards.find_one({"number": card_id})
+            similar_cards.append(card)
 
     return render_template(
         "similar_cards.html", card=card_details, similar_cards=similar_cards
@@ -51,7 +53,7 @@ def web_similar(card):
 @app.route("/all/")
 @app.route("/all/<page>")
 def web_all(page=0):
-    cards = client.mtggg.v1.cards.find()
+    cards = client.mtggg.cards.find()
     cards_total = cards.count()
 
     page = int(page)
