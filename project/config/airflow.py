@@ -1,0 +1,7 @@
+AIRFLOW_PROTO = "http://"
+AIRFLOW_HOST = "localhost"
+AIRFLOW_PORT = 8080
+
+AIRFLOW_API_STATUS = (
+    f"{AIRFLOW_PROTO}{AIRFLOW_HOST}:{AIRFLOW_PORT}/api/experimental/test"
+)

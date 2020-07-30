@@ -1,1 +1,5 @@
- 
+MONGODB_PROTO = "mongodb://"
+MONGODB_HOST = "localhost"
+MONGODB_PORT = 27017
+MONGODB_DB = "mtggg"
+MONGODB_COL_CARDS = f"{MONGODB_DB}/cards"
