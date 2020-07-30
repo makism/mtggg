@@ -1,4 +1,5 @@
 import sys
+import shutil
 import re
 import pandas as pd
 import numpy as np
@@ -8,6 +9,7 @@ import pyspark.sql.functions as fn
 import pyspark.sql.types as t
 from pyspark.sql.functions import udf
 from pyspark.ml.feature import StringIndexer, IndexToString
+import shutil
 
 
 sys.path.append("../config/")
@@ -22,7 +24,16 @@ text_patterns = preprocess_fn_text_rules.text_patterns
 def spark_session(spark=None) -> pyspark.sql.SparkSession:
     """ Create or, get an existing Spark session. """
     if spark is None:
-        spark = SparkSession.builder.appName("mtggg").getOrCreate()
+        spark = (
+            SparkSession.builder.appName("mtggg")
+            .config(
+                "spark.jars",
+                "/home/vagrant/opt/libs/mongo-hadoop-spark-2.0.2.jar,/home/vagrant/opt/libs/elasticsearch-hadoop-5.6.16.jar",
+            )
+            .config("spark.driver.extraClassPath", "/home/vagrant/opt/libs/")
+            .getOrCreate()
+        )
+
     return spark
 
 
@@ -58,6 +69,7 @@ def drop_columns(df) -> pyspark.sql.DataFrame:
         "supertypes",
         "toughness",
         "types",
+        "scryfallId",
     ]
 
     remove_cols = list(set(df.columns) - set(keep_cols))
@@ -144,7 +156,7 @@ def explode_to_strs(df, cols) -> pyspark.sql.DataFrame:
     return df
 
 
-def encode_strings(df, cols) -> pyspark.sql.DataFrame:
+def encode_strings(df, cols, fname) -> pyspark.sql.DataFrame:
     """ """
     for col in cols:
         indexer = StringIndexer(
@@ -153,8 +165,21 @@ def encode_strings(df, cols) -> pyspark.sql.DataFrame:
         model = indexer.fit(df)
         df = model.transform(df)
 
-        indexer.save(f"/tmp/pyspark/stringindexer_{col}")
-        model.save(f"/tmp/pyspark/stringindexer_model_{col}")
+        # We'll write the models in a TEMP dictorory and later we'll move them
+        # into our project's subdirectory.
+        indexer.write().overwrite().save(f"{config.TEMP}/{fname}_stringindexer_{col}")
+        model.write().overwrite().save(
+            f"{config.TEMP}/{fname}_stringindexer_model_{col}"
+        )
+
+        shutil.move(
+            f"{config.TEMP}/{fname}_stringindexer_{col}",
+            f"{config.SPARK_MODELS}/{fname}/stringindexer_{col}",
+        )
+        shutil.move(
+            f"{config.TEMP}/{fname}_stringindexer_model_{col}",
+            f"{config.SPARK_MODELS}/{fname}/stringindexer_model_{col}",
+        )
 
         # indexer.save(f"{config.SPARK_MODELS}/stringindexer_{col}")
         # model.save(f"{config.SPARK_MODELS}/stringindexer_model_{col}")

@@ -4,22 +4,15 @@ import os.path
 from metaflow import FlowSpec, Parameter, step
 
 import config
+from mf_common_base import MF_Common_Base
 
 
-class PrepareCards(FlowSpec):
-    keyruneCodes = Parameter("keyruneCodes", default="IKO,THB,ELD,M20,WAR")
-
+class PrepareCards(FlowSpec, MF_Common_Base):
     @step
     def start(self):
         """ Begin here. """
 
-        self.list_keyruneCodes = list()
-
-        for code in self.keyruneCodes.split(","):
-            json_file = f"{config.DATASET}/{code}.json"
-
-            if os.path.exists(json_file):
-                self.list_keyruneCodes.append(code)
+        self.parse_keyruneCodes(ftype="json")
 
         self.next(self.process_json, foreach="list_keyruneCodes")
 
