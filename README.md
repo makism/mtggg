@@ -2,7 +2,7 @@
 mtggg - mtg good game
 ```
 
-#### Source code
+### Source code
 
 The subdirectory `project/` facilitates all the files (python, jupyter notebooks, metaflow flows, and shell scripts) needed to:
 
@@ -14,11 +14,11 @@ c. Store the artifacts in Parquet, MongoDB and ElasticSearch.
 
 Furthermore, there are two applications, one in Flask-RESTful for serving the REST API and another one, in Flask for serving the experimnetal dynamic website.
 
-#### Vagrant image
+### Vagrant image
 
 In the subdirectory `Vagrant/` you may find all the relevant files to setup a virtual machine to run the project. Currently it's under heavy development. Only the bare minimum files are created.
 
-#### Screenshots
+### Screenshots
 
 1. REST API - Generate random card name
 
