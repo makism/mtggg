@@ -18,7 +18,7 @@ from api.resources.list import List, ListSets, ListPage
 # api.add_resource(RegistryList, "/v1/registry")
 api.add_resource(QuerySimilar, "/v1/ml/similar/<int:card_id>/")
 api.add_resource(
-    GenerateRandom, "/v1/ml/generate/random/", methods=["GET", "PUT", "DELETE"]
+    GenerateRandom, "/v1/ml/generate/random/", methods=["GET", "POST", "DELETE"]
 )
 api.add_resource(Search, "/v1/search/")
 api.add_resource(ListSets, "/v1/list/", methods=["GET"])

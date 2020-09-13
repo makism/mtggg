@@ -1,4 +1,4 @@
-""" Search for cards based on their name
+""" Search for cards based on their name.
 
 """
 from flask_restful import Resource, reqparse
@@ -9,7 +9,7 @@ from pymongo import MongoClient
 
 class Search(Resource):
     def get(self):
-        """  """
+        """Queries ElasticSearch for cards titled `name`."""
         parser = reqparse.RequestParser()
         parser.add_argument("name", type=str, required=False)
         args = parser.parse_args()

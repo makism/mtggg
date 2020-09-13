@@ -1,4 +1,4 @@
-""" Query similar cards using NLP
+""" Query similar cards using NLP.
 
 """
 from flask_restful import Resource
@@ -9,7 +9,7 @@ from pymongo import MongoClient
 
 class QuerySimilar(Resource):
     def get(self, card_id):
-        """ """
+        """Fetches the similar card for the given card `card_id`."""
         client = MongoClient()
 
         card_details = client.mtggg.cards.find_one({"number": card_id})
@@ -17,7 +17,7 @@ class QuerySimilar(Resource):
         card_details_json_obj = json.loads(json_str)
         del card_details_json_obj["_id"]
 
-        ml_similar = client.mtggg.ml.similar.find_one({"card_number": card_id})
+        ml_similar = client.mtggg.ml.similar.cards.find_one({"card_number": card_id})
         # json_str = json_util.dumps(ml_similar)
         # ml_similar_json_obj = json.loads(json_str)
         # del ml_similar_json_obj["card_number"]

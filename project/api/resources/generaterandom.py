@@ -31,16 +31,12 @@ import sys
 sys.path.append("../../config/")
 import config
 
-# app = Flask(__name__)
-# api = Api(app)
-# auth = HTTPBasicAuth()
-# client = MongoClient()
-
 
 class GenerateRandom(Resource):
     # decorators = [auth.login_required]
 
     def check_airflow_is_alive(self):
+        """Check is Apache Airflow is running."""
         import requests
 
         query = requests.get("http://localhost:8080//api/experimental/test")
@@ -51,6 +47,7 @@ class GenerateRandom(Resource):
             return False
 
     def create_dag(self, uuid, dt, deploy=False):
+        """Create a DAG to process the request."""
         tpl_file = "rest_api_generate.py.tpl"
 
         env = Environment(loader=FileSystemLoader(f"{config.AIRFLOW_PROJECT_DIR}"))
@@ -77,7 +74,8 @@ class GenerateRandom(Resource):
 
         return result
 
-    def put(self):
+    def post(self):
+        """Handles the request to generate a few random names. Requrns a unique `request_id`."""
         # Now
         now = dt.now()
 
@@ -107,7 +105,7 @@ class GenerateRandom(Resource):
         return result
 
     def get(self):
-        """  """
+        """Fetches and returns (if available) the result from the DAG."""
         # Now
         now = dt.now()
 
@@ -122,7 +120,7 @@ class GenerateRandom(Resource):
             return result
 
         parser = reqparse.RequestParser()
-        parser.add_argument("request_id", type=str, location="json", required=True)
+        parser.add_argument("request_id", type=str, required=True)
         args = parser.parse_args()
 
         uuid = args.request_id
@@ -155,7 +153,7 @@ class GenerateRandom(Resource):
             return result
 
     def delete(self):
-        """ Delete/Clean up a job/results given a `request_id` """
+        """Delete/Clean up a job/results given a `request_id`."""
         parser = reqparse.RequestParser()
         parser.add_argument("request_id", type=str, location="json", required=True)
         args = parser.parse_args()

@@ -9,7 +9,7 @@ from pymongo import MongoClient
 
 class ListSets(Resource):
     def get(self):
-        """ Return a list of all supported sets. """
+        """Return a list of all supported sets."""
         result = ["M21", "THB", "M20", "WAR"]
         return result
 
@@ -20,7 +20,7 @@ class ListSets(Resource):
 
 class List(Resource):
     def get(self, keyrune_code):
-        """ """
+        """Fetches all the cards for the given `keyrune_code`."""
         if not ListSets.check_valid_keyrunecode(keyrune_code):
             return "Error"
 
@@ -45,7 +45,7 @@ class List(Resource):
 
 class ListPage(Resource):
     def get(self, keyrune_code, page):
-        """ """
+        """Fetches all the cards, paginated, in page `page` for the given keyrune_code."""
         client = MongoClient()
         cards = client.mtggg.cards.find()
         count_cards = cards.count()
