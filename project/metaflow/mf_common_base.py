@@ -14,6 +14,8 @@ class MF_Common_Base(object):
         "keyruneCodes", default=",".join(keyrune for keyrune in VALID_KEYRUNECODES)
     )
 
+    VALID_CLEANUP = ["all", "models", "temp", "text_features"]
+
     file_json = f"{config.DATASET}/%s.json"
     file_parquet = f"{config.OUTPUT_DATASET}/%s_cards.parquet"
 
@@ -51,12 +53,13 @@ class MF_Common_Base(object):
 
         return df
 
-    def cleanUp_for_code(self, code):
+    def cleanUp_for_code(self, code, what="all"):
         tmp_dir = f"{config.TEMP}/{code}_cards.parquet"
         models_dir = f"{config.SPARK_MODELS}/{code}"
         dataset_dir = f"{config.OUTPUT_DATASET}/{code}_cards.parquet"
+        text_features_dir = f"{config.OUTPUT_DATASET}/{code}_cards_text_.parquet"
 
-        clean_dirs = [tmp_dir, models_dir, dataset_dir]
+        clean_dirs = [tmp_dir, models_dir, dataset_dir, text_features_dir]
         for clean_whichdir in clean_dirs:
             print(f"Will clean {clean_whichdir}...")
             shutil.rmtree(clean_whichdir, ignore_errors=True)

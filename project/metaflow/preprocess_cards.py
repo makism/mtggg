@@ -24,17 +24,7 @@ class BasicPreprocessing(FlowSpec, MF_Common_Base):
     def start(self):
         """ Begin here. """
 
-        self.list_keyruneCodes = list()
-
-        keyruneCodes = self.keyruneCodes
-        if "," not in keyruneCodes:
-            keyruneCodes += ","
-
-        for code in keyruneCodes.split(","):
-            json_file = f"{config.OUTPUT_DATASET}/{code}.json"
-
-            if os.path.exists(json_file):
-                self.list_keyruneCodes.append(code)
+        self.parse_keyruneCodes(ftype="json")
 
         if self.cleanUp == "all":
             for code in self.list_keyruneCodes:
