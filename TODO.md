@@ -2,6 +2,10 @@
 # Codebase
 
 
+## Flask-RESTful
+
+- [ ] Integrate OpenAPI/Swagger.
+
 ## Metaflow
 
 - [ ] Resolve issue with UDF `text_to_vector`, and the use of `sklearn`'s `LabelEncoder class.`
