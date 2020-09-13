@@ -9,6 +9,7 @@ client = MongoClient()
 
 @app.route("/search/", methods=["POST"])
 def web_search():
+    """Simplee card search."""
     param_search = request.form["search_query"]
     results = []
     total = 0
@@ -32,6 +33,7 @@ def web_search():
 
 @app.route("/similar/<card>/")
 def web_similar(card):
+    """Fetch a list of similar cards maching against another one."""
     card = int(card)
 
     card_details = client.mtggg.cards.find_one({"number": card})
@@ -53,6 +55,7 @@ def web_similar(card):
 @app.route("/all/")
 @app.route("/all/<page>")
 def web_all(page=0):
+    """Fetch all cards from ElasticSearch, paginated."""
     cards = client.mtggg.cards.find()
     cards_total = cards.count()
 
@@ -84,4 +87,4 @@ def web_all(page=0):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=5001)
