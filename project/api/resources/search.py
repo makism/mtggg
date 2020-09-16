@@ -2,12 +2,28 @@
 
 """
 from flask_restful import Resource, reqparse
+from flask_restful_swagger_3 import swagger
 from bson import json_util
 import json
 from pymongo import MongoClient
 
 
 class Search(Resource):
+    @swagger.doc(
+        {
+            "tags": ["Search"],
+            "parameters": [
+                {
+                    "name": "name",
+                    "description": "A card name.",
+                    "in": "query",
+                    "required": True,
+                    "schema": {"type": "string"},
+                }
+            ],
+            "responses": {},
+        }
+    )
     def get(self):
         """Queries ElasticSearch for cards titled `name`."""
         parser = reqparse.RequestParser()

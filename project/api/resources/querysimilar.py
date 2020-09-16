@@ -2,12 +2,28 @@
 
 """
 from flask_restful import Resource
+from flask_restful_swagger_3 import swagger
 from bson import json_util
 import json
 from pymongo import MongoClient
 
 
 class QuerySimilar(Resource):
+    @swagger.doc(
+        {
+            "tags": ["Query Similar"],
+            "parameters": [
+                {
+                    "name": "card_id",
+                    "description": "A card id.",
+                    "required": True,
+                    "in": "path",
+                    "schema": {"type": "int"},
+                }
+            ],
+            "responses": {},
+        }
+    )
     def get(self, card_id):
         """Fetches the similar card for the given card `card_id`."""
         client = MongoClient()

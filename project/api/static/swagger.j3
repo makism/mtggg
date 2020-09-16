@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Swagger-UI</title>
+    <!-- <link rel="stylesheet" href="/static/theme-flattop.css" /> -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@3.31.1/swagger-ui.css">
+    <style>
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+
+      body
+      {
+        margin:0;
+        background: #fafafa;
+      }
+    </style>
+
+</head>
+<body>
+<div id="swagger-ui"></div>
+<script src="https://unpkg.com/swagger-ui-dist@3.31.1/swagger-ui-standalone-preset.js"></script>
+<script src="https://unpkg.com/swagger-ui-dist@3.31.1/swagger-ui-bundle.js"></script>
+<script>
+    window.onload = function() {
+        // Build a system
+        const ui = SwaggerUIBundle({
+            url:  "{{ swagger_json }}",
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            showExtensions: true,
+            showCommonExtensions: true,
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl
+            ],
+            layout: "StandaloneLayout",
+        })
+        window.ui = ui
+    }
+</script>
+</body>
+</html>

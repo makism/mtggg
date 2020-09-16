@@ -14,6 +14,7 @@ This endpoint works as follows:
 import numpy as np
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from flask_restful_swagger_3 import swagger
 from jinja2 import Environment, FileSystemLoader, Template
 from pymongo import MongoClient
 from bson import json_util
@@ -74,6 +75,31 @@ class GenerateRandom(Resource):
 
         return result
 
+    @swagger.doc(
+        {
+            "tags": ["Generate Random"],
+            "responses": {
+                "200": {
+                    "description": {},
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "examples": {
+                                "GenerateRandomResponse": {
+                                    "summary": "Submits the request and returns a UUID to keep track of it.",
+                                    "value": {
+                                        "when": f"{dt.now()}",
+                                        "message": "Instructional message",
+                                        "request_id": f"{uuid.uuid4()}",
+                                    },
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    )
     def post(self):
         """Handles the request to generate a few random names. Requrns a unique `request_id`."""
         # Now
@@ -104,6 +130,20 @@ class GenerateRandom(Resource):
 
         return result
 
+    @swagger.doc(
+        {
+            "tags": ["Generate Random"],
+            "parameters": [
+                {
+                    "name": "request_id",
+                    "schema": {"type": "string"},
+                    "in": "query",
+                    "required": True,
+                }
+            ],
+            "responses": {},
+        }
+    )
     def get(self):
         """Fetches and returns (if available) the result from the DAG."""
         # Now
@@ -152,6 +192,20 @@ class GenerateRandom(Resource):
             result["card_names"] = query["response"]
             return result
 
+    @swagger.doc(
+        {
+            "tags": ["Generate Random"],
+            "parameters": [
+                {
+                    "name": "request_id",
+                    "schema": {"type": "string"},
+                    "in": "query",
+                    "required": True,
+                }
+            ],
+            "responses": {},
+        }
+    )
     def delete(self):
         """Delete/Clean up a job/results given a `request_id`."""
         parser = reqparse.RequestParser()
