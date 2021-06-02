@@ -188,7 +188,7 @@ typing-extensions==3.7.4.2
 tzlocal==1.5.1
 umap-learn==0.4.3
 unicodecsv==0.14.1
-urllib3==1.25.9
+urllib3==1.26.5
 wcwidth==0.1.9
 webencodings==0.5.1
 Werkzeug==0.16.1
