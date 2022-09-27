@@ -22,7 +22,7 @@ class BasicPreprocessing(FlowSpec, MF_Common_Base):
 
     @step
     def start(self):
-        """ Begin here. """
+        """Begin here."""
 
         self.parse_keyruneCodes(ftype="json")
 
@@ -30,13 +30,16 @@ class BasicPreprocessing(FlowSpec, MF_Common_Base):
             for code in self.list_keyruneCodes:
                 self.cleanUp_for_code(code)
 
-        self.next(self.process, foreach="list_keyruneCodes")
+        # self.next(self.process, foreach=self.list_keyruneCodes")
+        self.code = "WAR"
+
+        self.next(self.process)
 
     @step
     def process(self):
-        """ Read data. """
+        """Read data."""
 
-        self.code = self.input
+        # self.code = self.input
 
         if self.code in self.cleanUp:
             self.cleanUp_for_code(self.code)
@@ -119,17 +122,17 @@ class BasicPreprocessing(FlowSpec, MF_Common_Base):
             f"{config.OUTPUT_DATASET}/{self.code}_cards.parquet",
         )
 
-        self.next(self.join)
-
-    @step
-    def join(self, inputs):
-        """Join our parallel branches."""
-
         self.next(self.end)
+
+    # @step
+    # def join(self, inputs):
+    #     """Join our parallel branches."""
+
+    #     self.next(self.end)
 
     @step
     def end(self):
-        """ Finalize and clean up. """
+        """Finalize and clean up."""
 
         print("All done.")
 

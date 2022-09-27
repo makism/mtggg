@@ -22,15 +22,15 @@ text_patterns = preprocess_fn_text_rules.text_patterns
 
 
 def spark_session(spark=None) -> pyspark.sql.SparkSession:
-    """ Create or, get an existing Spark session. """
+    """Create or, get an existing Spark session."""
     if spark is None:
         spark = (
             SparkSession.builder.appName("mtggg")
-            .config(
-                "spark.jars",
-                "/home/vagrant/opt/libs/mongo-hadoop-spark-2.0.2.jar,/home/vagrant/opt/libs/elasticsearch-hadoop-5.6.16.jar",
-            )
-            .config("spark.driver.extraClassPath", "/home/vagrant/opt/libs/")
+            # .config(
+            #     "spark.jars",
+            #     "/home/vagrant/opt/libs/mongo-hadoop-spark-2.0.2.jar,/home/vagrant/opt/libs/elasticsearch-hadoop-5.6.16.jar",
+            # )
+            # .config("spark.driver.extraClassPath", "/home/vagrant/opt/libs/")
             .getOrCreate()
         )
 
@@ -38,7 +38,7 @@ def spark_session(spark=None) -> pyspark.sql.SparkSession:
 
 
 def remove_duplicate_cards(df) -> pyspark.sql.DataFrame:
-    """ Remove duplicate card entries based on their name. """
+    """Remove duplicate card entries based on their name."""
     pd_names = df.select(["number", "name"]).toPandas()
 
     unique_names, indices, counts = np.unique(
@@ -54,7 +54,7 @@ def remove_duplicate_cards(df) -> pyspark.sql.DataFrame:
 
 
 def drop_columns(df) -> pyspark.sql.DataFrame:
-    """ Drop unwanted columns. """
+    """Drop unwanted columns."""
     keep_cols = [
         "colorIdentity",
         "convertedManaCost",
@@ -81,7 +81,7 @@ def drop_columns(df) -> pyspark.sql.DataFrame:
 
 @udf
 def udf_filter_text(name, text):
-    """ A simple UDF to search & replace occurances of a card's name with a placeholder. """
+    """A simple UDF to search & replace occurances of a card's name with a placeholder."""
     if isinstance(text, str):
         new_text = text
         new_text = new_text.replace(name, "CARDNAME")
@@ -147,7 +147,7 @@ def text_to_vector(label_encoder, text_features):
 
 
 def explode_to_strs(df, cols) -> pyspark.sql.DataFrame:
-    """ Explode the selected arrays in a string, separated by ','. """
+    """Explode the selected arrays in a string, separated by ','."""
     for col in cols:
         df_edited = df.selectExpr(["number", col]).select(
             "number", fn.expr(f"concat_ws(',', {col})").alias(f"str_{col}")
@@ -167,20 +167,20 @@ def encode_strings(df, cols, fname) -> pyspark.sql.DataFrame:
 
         # We'll write the models in a TEMP dictorory and later we'll move them
         # into our project's subdirectory.
-        indexer.write().overwrite().save(f"{config.TEMP}/{fname}_stringindexer_{col}")
-        model.write().overwrite().save(
-            f"{config.TEMP}/{fname}_stringindexer_model_{col}"
-        )
+        # indexer.write().overwrite().save(f"{config.TEMP}/{fname}_stringindexer_{col}")
+        # model.write().overwrite().save(
+        #     f"{config.TEMP}/{fname}_stringindexer_model_{col}"
+        # )
 
-        shutil.move(
-            f"{config.TEMP}/{fname}_stringindexer_{col}",
-            f"{config.SPARK_MODELS}/{fname}/stringindexer_{col}",
-        )
-        shutil.move(
-            f"{config.TEMP}/{fname}_stringindexer_model_{col}",
-            f"{config.SPARK_MODELS}/{fname}/stringindexer_model_{col}",
-        )
+        # shutil.move(
+        #     f"{config.TEMP}/{fname}_stringindexer_{col}",
+        #     f"{config.SPARK_MODELS}/{fname}/stringindexer_{col}",
+        # )
+        # shutil.move(
+        #     f"{config.TEMP}/{fname}_stringindexer_model_{col}",
+        #     f"{config.SPARK_MODELS}/{fname}/stringindexer_model_{col}",
+        # )
 
-        # indexer.save(f"{config.SPARK_MODELS}/stringindexer_{col}")
-        # model.save(f"{config.SPARK_MODELS}/stringindexer_model_{col}")
+        indexer.save(f"{config.SPARK_MODELS}/stringindexer_{col}")
+        model.save(f"{config.SPARK_MODELS}/stringindexer_model_{col}")
     return df
