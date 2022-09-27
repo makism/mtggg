@@ -1,0 +1,17 @@
+jupyterlab==3.2.5
+jupyterlab-sparkmonitor==4.1.0
+jupyterlab-code-formatter
+black
+isort
+numpy
+scipy
+scikit-learn
+pandas
+seaborn
+matplotlib
+tqdm
+networkx
+statsmodels
+sqlalchemy
+sqlparse
+pyhive[hive]

@@ -1,0 +1,50 @@
+version: "3.7"
+services:
+  jupyterlab:
+    image: jupyterlab
+    container_name: jupyterlab
+    ports:
+      - 8888:8888
+    networks:
+      - spark-cluster
+    volumes:
+      - shared-workspace:/opt/workspace/
+      - ./data/:/data/
+    depends_on:
+      - spark-master
+      - spark-workers
+  spark-master:
+    image: spark-master
+    container_name: spark-master
+    ports:
+      - 4040:4040
+      - 7077:7077
+      - 6066:6066
+    networks:
+      - spark-cluster
+    volumes:
+      - ./data/:/data/
+  spark-workers:
+    image: spark-worker
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - 8081-8090:8081
+    networks:
+      - spark-cluster
+    volumes:
+      - ./data/:/data/
+    environment:
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=1G
+    depends_on:
+      - spark-master
+volumes:
+  shared-workspace:
+    name: "shared-workspace"
+    driver: local
+networks:
+  spark-cluster:
+    driver: bridge
